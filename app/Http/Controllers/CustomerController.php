@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\CustomerCollection;
+use App\Http\Resources\CustomerResource;
 use App\Models\Customer;
 use Illuminate\Http\Request;
 
@@ -14,7 +16,12 @@ class CustomerController extends Controller
      */
     public function index()
     {
-        return Customer::all();
+        return new CustomerCollection(Customer::latest()->paginate(10));
+    }
+    
+    public function search($field,$query)
+    {
+        return new CustomerCollection(Customer::where($field,'LIKE',"%$query%")->latest()->paginate(10));
     }
 
     /**
@@ -50,7 +57,8 @@ class CustomerController extends Controller
      */
     public function show(Customer $customer)
     {
-        //
+        return new CustomerResource($customer);
+        // return new CustomerResource(Customer::findOrFail($customer));
     }
 
     /**
@@ -62,7 +70,22 @@ class CustomerController extends Controller
      */
     public function update(Request $request, Customer $customer)
     {
-        //
+        
+        $this->validate($request,[
+            'name' => 'required',
+            'email' => 'required|email|unique:customers,email,'.$customer,
+            'phone' => 'required|numeric',
+            'address' => 'required',
+            'total' => 'required|numeric',
+        ]);
+        // $customer = Customer::findOrfail($customer);
+        $customer->name = $request->name;
+        $customer->email = $request->email;
+        $customer->phone = $request->phone;
+        $customer->address = $request->address;
+        $customer->total = $request->total;
+        $customer->save();
+        return new CustomerResource($customer);
     }
 
     /**
@@ -73,6 +96,9 @@ class CustomerController extends Controller
      */
     public function destroy(Customer $customer)
     {
-        //
+        
+        // $customer = Customer::findOrfail($id);
+        $customer->delete();
+        return new CustomerResource($customer);
     }
 }
