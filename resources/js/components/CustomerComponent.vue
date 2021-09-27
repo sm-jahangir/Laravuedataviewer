@@ -3,6 +3,8 @@
         
         <!-- set progressbar -->
         <vue-progress-bar></vue-progress-bar>
+        <vue-snotify></vue-snotify>
+
         <div class="row justify-content-center">
             <div class="col-md-12">
                 <div class="card">
@@ -155,6 +157,7 @@
                 this.getData();
                 this.query = "";
                 this.queryFiled = "name";
+                this.$snotify.success("Data Successfully Refresh", "Success");
             },
 
 
