@@ -12,7 +12,7 @@
             <div class="card-header">
                 <h4 class="card-title">Customers</h4>
                 <div class="card-tools" style="position: absolute;right: 1rem;top: .5rem;">
-                <button type="button" class="btn btn-info">
+                <button type="button" class="btn btn-info"  @click="create">
                     Add New
                     <i class="fas fa-plus"></i>
                 </button>
@@ -85,11 +85,62 @@
                 </div>
             </div>
         </div>
+
+   <!-- Modal -->
+    <div class="modal fade" id="showModal" tabindex="-1" role="dialog" aria-labelledby="showModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="showModalLabel">Add New Customer</h5>
+
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+        <form @submit.prevent="store()" @keydown="form.onKeydown($event)">
+          <div class="modal-body">
+              <div class="form-group">
+                <label for="name">Name</label>
+                <input type="text" v-model="form.name" name="name" id="name" class="form-control" placeholder="Your Name">
+                <div v-if="form.errors.has('name')" v-html="form.errors.get('name')" />
+              </div>
+              <div class="form-group">
+                <label for="email">Email</label>
+                <input v-model="form.email"  type="email" name="email" id="email" class="form-control" placeholder="Your Email">
+                <div v-if="form.errors.has('email')" v-html="form.errors.get('email')" />
+              </div>
+              <div class="form-group">
+                <label for="phone">Phone</label>
+                <input v-model="form.phone"  type="number" name="phone" id="phone" class="form-control" placeholder="Your Phone">
+                <div v-if="form.errors.has('phone')" v-html="form.errors.get('phone')" />
+              </div>
+              <div class="form-group">
+                <label for="address">Address</label>
+                <input v-model="form.address"  type="text" name="address" id="address" class="form-control" placeholder="Your address">
+                <div v-if="form.errors.has('address')" v-html="form.errors.get('address')" />
+              </div>
+              <div class="form-group">
+                <label for="total">Total</label>
+                <input v-model="form.total"  type="number" name="total" id="total" class="form-control" placeholder="Your total">
+                <div v-if="form.errors.has('total')" v-html="form.errors.get('total')" />
+              </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button :disabled="form.busy" type="submit" class="btn btn-primary">Save changes</button>
+          </div>
+        </form>
+
+        </div>
+      </div>
+    </div>
+
     </div>
     
 </template>
 
 <script>
+import Form from 'vform'
     export default {
         data() {
             return {
@@ -98,7 +149,16 @@
                 customers: [],
                 pagination: {
                     current_page:1,
-                }
+                },
+                form: new Form({
+                    id: "",
+                    name: "",
+                    email: "",
+                    phone: "",
+                    address: "",
+                    total: ""
+                }),
+
             }
         },
         
@@ -158,6 +218,37 @@
                 this.query = "";
                 this.queryFiled = "name";
                 this.$snotify.success("Data Successfully Refresh", "Success");
+            },   
+            create() {
+            // this.editMode = false;
+                this.form.reset();
+                this.form.clear();
+                $("#showModal").modal("show");
+            },
+                    
+            store() {
+            this.$Progress.start();
+            this.form.busy = true;
+            this.form
+                .post("/api/customer")
+                .then(response => {
+                this.getData();
+                $("#showModal").modal("hide");
+                if (this.form.successful) {
+                    this.$Progress.finish();
+                    this.$snotify.success("Customer Successfully Saved", "Success");
+                } else {
+                    this.$Progress.fail();
+                    this.$snotify.error(
+                    "Something went wrong try again later.",
+                    "Error"
+                    );
+                }
+                })
+                .catch(e => {
+                this.$Progress.fail();
+                console.log(e);
+                });
             },
 
 
