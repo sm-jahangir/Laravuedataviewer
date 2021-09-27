@@ -6,7 +6,21 @@
         <div class="row justify-content-center">
             <div class="col-md-12">
                 <div class="card">
-                    <div class="card-header">Customer Component</div>
+                    
+            <div class="card-header">
+                <h4 class="card-title">Customers</h4>
+                <div class="card-tools" style="position: absolute;right: 1rem;top: .5rem;">
+                <button type="button" class="btn btn-info">
+                    Add New
+                    <i class="fas fa-plus"></i>
+                </button>
+                <button type="button" class="btn btn-primary" @click="reload">
+                    Reload
+                    <i class="fas fa-sync"></i>
+                </button>
+                </div>
+            </div>
+
 
             <div class="m-3">
               <div class="row">
@@ -137,6 +151,12 @@
                 this.$Progress.fail();
                 });
             },
+            reload() {
+                this.getData();
+                this.query = "";
+                this.queryFiled = "name";
+            },
+
 
         },
     }
