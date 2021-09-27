@@ -2345,6 +2345,43 @@ __webpack_require__.r(__webpack_exports__);
 
         console.log(e);
       });
+    },
+    destroy: function destroy(customer) {
+      var _this5 = this;
+
+      this.$snotify.clear();
+      this.$snotify.confirm("You will not be able to recover this data!", "Are you sure?", {
+        showProgressBar: false,
+        closeOnClick: false,
+        pauseOnHover: true,
+        buttons: [{
+          text: "Yes",
+          action: function action(toast) {
+            _this5.$snotify.remove(toast.id);
+
+            _this5.$Progress.start();
+
+            axios["delete"]("/api/customer/" + customer.id).then(function (response) {
+              _this5.getData();
+
+              _this5.$Progress.finish();
+
+              _this5.$snotify.success("Customer Successfully Deleted", "Success");
+            })["catch"](function (e) {
+              _this5.$Progress.fail();
+
+              console.log(e);
+            });
+          },
+          bold: true
+        }, {
+          text: "No",
+          action: function action(toast) {
+            _this5.$snotify.remove(toast.id);
+          },
+          bold: true
+        }]
+      });
     }
   }
 });
@@ -38389,10 +38426,15 @@ var render = function() {
                                   ),
                                   _vm._v(" "),
                                   _c(
-                                    "a",
+                                    "button",
                                     {
                                       staticClass: "btn btn-danger",
-                                      attrs: { href: "" }
+                                      attrs: { type: "button", href: "" },
+                                      on: {
+                                        click: function($event) {
+                                          return _vm.destroy(customer)
+                                        }
+                                      }
                                     },
                                     [_vm._v("Deleted")]
                                   )

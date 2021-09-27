@@ -66,7 +66,7 @@
                                     <td>{{customer.total}}</td>
                                     <td>
                                         <button type="button" class="btn btn-primary" @click="edit(customer)">Edit</button>
-                                        <a class="btn btn-danger" href="">Deleted</a>
+                                        <button type="button"  @click="destroy(customer)" class="btn btn-danger" href="">Deleted</button>
                                     </td>
                                 </tr>         
                                 <tr v-show="!customers.length">
@@ -283,6 +283,51 @@ import Form from 'vform'
                 this.$Progress.fail();
                 console.log(e);
               });
+          },
+
+
+          destroy(customer) {
+            this.$snotify.clear();
+            this.$snotify.confirm(
+              "You will not be able to recover this data!",
+              "Are you sure?",
+              {
+                showProgressBar: false,
+                closeOnClick: false,
+                pauseOnHover: true,
+                buttons: [
+                  {
+                    text: "Yes",
+                    action: toast => {
+                      this.$snotify.remove(toast.id);
+                      this.$Progress.start();
+                      axios
+                        .delete("/api/customer/" + customer.id)
+                        .then(response => {
+                          this.getData();
+                          this.$Progress.finish();
+                          this.$snotify.success(
+                            "Customer Successfully Deleted",
+                            "Success"
+                          );
+                        })
+                        .catch(e => {
+                          this.$Progress.fail();
+                          console.log(e);
+                        });
+                    },
+                    bold: true
+                  },
+                  {
+                    text: "No",
+                    action: toast => {
+                      this.$snotify.remove(toast.id);
+                    },
+                    bold: true
+                  }
+                ]
+              }
+            );
           }
 
 
