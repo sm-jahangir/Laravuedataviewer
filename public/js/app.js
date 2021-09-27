@@ -2113,14 +2113,53 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
     return {
+      query: "",
+      queryFiled: "name",
       customers: [],
       pagination: {
         current_page: 1
       }
     };
+  },
+  watch: {
+    query: function query(newQ, old) {
+      if (newQ === "") {
+        this.getData();
+      } else {
+        console.log(newQ);
+        this.searchData();
+      }
+    }
   },
   mounted: function mounted() {
     //  [App.vue specific] When App.vue is finish loading finish the progress bar
@@ -2133,7 +2172,7 @@ __webpack_require__.r(__webpack_exports__);
       var _this = this;
 
       this.$Progress.start();
-      axios.get('api/customer?page=' + this.pagination.current_page).then(function (response) {
+      axios.get('/api/customer?page=' + this.pagination.current_page).then(function (response) {
         _this.customers = response.data.data;
         _this.pagination = response.data.meta;
         console.log(response);
@@ -2143,6 +2182,21 @@ __webpack_require__.r(__webpack_exports__);
         console.log(e);
 
         _this.$Progress.fail();
+      });
+    },
+    searchData: function searchData() {
+      var _this2 = this;
+
+      this.$Progress.start();
+      axios.get("/api/search/customers/" + this.queryFiled + "/" + this.query + "?page=" + this.pagination.current_page).then(function (response) {
+        _this2.customers = response.data.data;
+        _this2.pagination = response.data.meta;
+
+        _this2.$Progress.finish();
+      })["catch"](function (e) {
+        console.log(e);
+
+        _this2.$Progress.fail();
       });
     }
   }
@@ -37974,48 +38028,166 @@ var render = function() {
               _vm._v("Customer Component")
             ]),
             _vm._v(" "),
+            _c("div", { staticClass: "m-3" }, [
+              _c("div", { staticClass: "row" }, [
+                _vm._m(0),
+                _vm._v(" "),
+                _c("div", { staticClass: "col-md-3" }, [
+                  _c(
+                    "select",
+                    {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.queryFiled,
+                          expression: "queryFiled"
+                        }
+                      ],
+                      staticClass: "form-control",
+                      attrs: { id: "fileds" },
+                      on: {
+                        change: function($event) {
+                          var $$selectedVal = Array.prototype.filter
+                            .call($event.target.options, function(o) {
+                              return o.selected
+                            })
+                            .map(function(o) {
+                              var val = "_value" in o ? o._value : o.value
+                              return val
+                            })
+                          _vm.queryFiled = $event.target.multiple
+                            ? $$selectedVal
+                            : $$selectedVal[0]
+                        }
+                      }
+                    },
+                    [
+                      _c("option", { attrs: { value: "name" } }, [
+                        _vm._v("Name")
+                      ]),
+                      _vm._v(" "),
+                      _c("option", { attrs: { value: "email" } }, [
+                        _vm._v("Email")
+                      ]),
+                      _vm._v(" "),
+                      _c("option", { attrs: { value: "phone" } }, [
+                        _vm._v("Phone")
+                      ]),
+                      _vm._v(" "),
+                      _c("option", { attrs: { value: "address" } }, [
+                        _vm._v("Address")
+                      ]),
+                      _vm._v(" "),
+                      _c("option", { attrs: { value: "total" } }, [
+                        _vm._v("Total")
+                      ])
+                    ]
+                  )
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "col-md-7" }, [
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.query,
+                        expression: "query"
+                      }
+                    ],
+                    staticClass: "form-control",
+                    attrs: { type: "text", placeholder: "Search" },
+                    domProps: { value: _vm.query },
+                    on: {
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.query = $event.target.value
+                      }
+                    }
+                  })
+                ])
+              ])
+            ]),
+            _vm._v(" "),
             _c(
               "div",
               { staticClass: "card-body" },
               [
-                _c(
-                  "table",
-                  {
-                    staticClass: "table table-hover table-borderd table-striped"
-                  },
-                  [
-                    _vm._m(0),
-                    _vm._v(" "),
-                    _c(
-                      "tbody",
-                      _vm._l(_vm.customers, function(customer, index) {
-                        return _c("tr", { key: customer.id }, [
-                          _c("th", { attrs: { scope: "row" } }, [
-                            _vm._v(_vm._s(index + 1))
-                          ]),
+                _c("div", { staticClass: "table-responsive" }, [
+                  _c(
+                    "table",
+                    {
+                      staticClass:
+                        "table table-hover table-borderd table-striped"
+                    },
+                    [
+                      _vm._m(1),
+                      _vm._v(" "),
+                      _c(
+                        "tbody",
+                        [
+                          _vm._l(_vm.customers, function(customer, index) {
+                            return _c(
+                              "tr",
+                              {
+                                directives: [
+                                  {
+                                    name: "show",
+                                    rawName: "v-show",
+                                    value: _vm.customers.length,
+                                    expression: "customers.length"
+                                  }
+                                ],
+                                key: customer.id
+                              },
+                              [
+                                _c("th", { attrs: { scope: "row" } }, [
+                                  _vm._v(_vm._s(index + 1))
+                                ]),
+                                _vm._v(" "),
+                                _c("td", [_vm._v(_vm._s(customer.name))]),
+                                _vm._v(" "),
+                                _c("td", [_vm._v(_vm._s(customer.email))]),
+                                _vm._v(" "),
+                                _c("td", [_vm._v(_vm._s(customer.phone))]),
+                                _vm._v(" "),
+                                _c("td", [_vm._v(_vm._s(customer.total))]),
+                                _vm._v(" "),
+                                _vm._m(2, true)
+                              ]
+                            )
+                          }),
                           _vm._v(" "),
-                          _c("td", [_vm._v(_vm._s(customer.name))]),
-                          _vm._v(" "),
-                          _c("td", [_vm._v(_vm._s(customer.email))]),
-                          _vm._v(" "),
-                          _c("td", [_vm._v(_vm._s(customer.phone))]),
-                          _vm._v(" "),
-                          _c("td", [_vm._v(_vm._s(customer.total))]),
-                          _vm._v(" "),
-                          _vm._m(1, true)
-                        ])
-                      }),
-                      0
-                    )
-                  ]
-                ),
+                          _c(
+                            "tr",
+                            {
+                              directives: [
+                                {
+                                  name: "show",
+                                  rawName: "v-show",
+                                  value: !_vm.customers.length,
+                                  expression: "!customers.length"
+                                }
+                              ]
+                            },
+                            [_vm._m(3)]
+                          )
+                        ],
+                        2
+                      )
+                    ]
+                  )
+                ]),
                 _vm._v(" "),
                 _vm.pagination.last_page > 1
                   ? _c("pagination", {
                       attrs: { pagination: _vm.pagination, offset: 5 },
                       on: {
                         paginate: function($event) {
-                          return _vm.getData()
+                          _vm.query === "" ? _vm.getData() : _vm.searchData()
                         }
                       }
                     })
@@ -38031,6 +38203,14 @@ var render = function() {
   )
 }
 var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "col-md-2" }, [
+      _c("strong", [_vm._v("Search By :")])
+    ])
+  },
   function() {
     var _vm = this
     var _h = _vm.$createElement
@@ -38056,6 +38236,18 @@ var staticRenderFns = [
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
     return _c("td", [_c("a", { attrs: { href: "" } }, [_vm._v("Deleted")])])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("td", { attrs: { colspan: "6" } }, [
+      _c(
+        "div",
+        { staticClass: "alert alert-danger", attrs: { role: "alert" } },
+        [_vm._v("Sorry :( No data found.")]
+      )
+    ])
   }
 ]
 render._withStripped = true
