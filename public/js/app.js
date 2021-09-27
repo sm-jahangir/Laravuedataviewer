@@ -2207,10 +2207,12 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
     return {
+      editMode: false,
       query: "",
       queryFiled: "name",
       customers: [],
@@ -2282,7 +2284,7 @@ __webpack_require__.r(__webpack_exports__);
       this.$snotify.success("Data Successfully Refresh", "Success");
     },
     create: function create() {
-      // this.editMode = false;
+      this.editMode = false;
       this.form.reset();
       this.form.clear();
       $("#showModal").modal("show");
@@ -2308,6 +2310,38 @@ __webpack_require__.r(__webpack_exports__);
         }
       })["catch"](function (e) {
         _this3.$Progress.fail();
+
+        console.log(e);
+      });
+    },
+    edit: function edit(customer) {
+      this.editMode = true;
+      this.form.reset();
+      this.form.clear();
+      this.form.fill(customer);
+      $("#showModal").modal("show");
+    },
+    update: function update() {
+      var _this4 = this;
+
+      this.$Progress.start();
+      this.form.busy = true;
+      this.form.put("/api/customer/" + this.form.id).then(function (response) {
+        _this4.getData();
+
+        $("#showModal").modal("hide");
+
+        if (_this4.form.successful) {
+          _this4.$Progress.finish();
+
+          _this4.$snotify.success("Customer Successfully Updated", "Success");
+        } else {
+          _this4.$Progress.fail();
+
+          _this4.$snotify.error("Something went wrong try again later.", "Error");
+        }
+      })["catch"](function (e) {
+        _this4.$Progress.fail();
 
         console.log(e);
       });
@@ -38339,7 +38373,30 @@ var render = function() {
                                 _vm._v(" "),
                                 _c("td", [_vm._v(_vm._s(customer.total))]),
                                 _vm._v(" "),
-                                _vm._m(2, true)
+                                _c("td", [
+                                  _c(
+                                    "button",
+                                    {
+                                      staticClass: "btn btn-primary",
+                                      attrs: { type: "button" },
+                                      on: {
+                                        click: function($event) {
+                                          return _vm.edit(customer)
+                                        }
+                                      }
+                                    },
+                                    [_vm._v("Edit")]
+                                  ),
+                                  _vm._v(" "),
+                                  _c(
+                                    "a",
+                                    {
+                                      staticClass: "btn btn-danger",
+                                      attrs: { href: "" }
+                                    },
+                                    [_vm._v("Deleted")]
+                                  )
+                                ])
                               ]
                             )
                           }),
@@ -38356,7 +38413,7 @@ var render = function() {
                                 }
                               ]
                             },
-                            [_vm._m(3)]
+                            [_vm._m(2)]
                           )
                         ],
                         2
@@ -38400,7 +38457,22 @@ var render = function() {
             { staticClass: "modal-dialog", attrs: { role: "document" } },
             [
               _c("div", { staticClass: "modal-content" }, [
-                _vm._m(4),
+                _c("div", { staticClass: "modal-header" }, [
+                  _c(
+                    "h5",
+                    {
+                      staticClass: "modal-title",
+                      attrs: { id: "showModalLabel" }
+                    },
+                    [
+                      _vm._v(
+                        _vm._s(_vm.editMode ? "Edit" : "Add New") + "  Customer"
+                      )
+                    ]
+                  ),
+                  _vm._v(" "),
+                  _vm._m(3)
+                ]),
                 _vm._v(" "),
                 _c(
                   "form",
@@ -38408,7 +38480,7 @@ var render = function() {
                     on: {
                       submit: function($event) {
                         $event.preventDefault()
-                        return _vm.store()
+                        _vm.editMode ? _vm.update() : _vm.store()
                       },
                       keydown: function($event) {
                         return _vm.form.onKeydown($event)
@@ -38688,12 +38760,6 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("td", [_c("a", { attrs: { href: "" } }, [_vm._v("Deleted")])])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
     return _c("td", { attrs: { colspan: "6" } }, [
       _c(
         "div",
@@ -38706,26 +38772,18 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "modal-header" }, [
-      _c(
-        "h5",
-        { staticClass: "modal-title", attrs: { id: "showModalLabel" } },
-        [_vm._v("Add New Customer")]
-      ),
-      _vm._v(" "),
-      _c(
-        "button",
-        {
-          staticClass: "close",
-          attrs: {
-            type: "button",
-            "data-dismiss": "modal",
-            "aria-label": "Close"
-          }
-        },
-        [_c("span", { attrs: { "aria-hidden": "true" } }, [_vm._v("×")])]
-      )
-    ])
+    return _c(
+      "button",
+      {
+        staticClass: "close",
+        attrs: {
+          type: "button",
+          "data-dismiss": "modal",
+          "aria-label": "Close"
+        }
+      },
+      [_c("span", { attrs: { "aria-hidden": "true" } }, [_vm._v("×")])]
+    )
   }
 ]
 render._withStripped = true

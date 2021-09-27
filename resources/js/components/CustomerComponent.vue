@@ -65,7 +65,8 @@
                                     <td>{{customer.phone}}</td>
                                     <td>{{customer.total}}</td>
                                     <td>
-                                        <a href="">Deleted</a>
+                                        <button type="button" class="btn btn-primary" @click="edit(customer)">Edit</button>
+                                        <a class="btn btn-danger" href="">Deleted</a>
                                     </td>
                                 </tr>         
                                 <tr v-show="!customers.length">
@@ -91,13 +92,13 @@
       <div class="modal-dialog" role="document">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" id="showModalLabel">Add New Customer</h5>
+            <h5 class="modal-title" id="showModalLabel">{{ editMode ? "Edit" : "Add New" }}  Customer</h5>
 
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
           </div>
-        <form @submit.prevent="store()" @keydown="form.onKeydown($event)">
+        <form @submit.prevent="editMode ? update() : store()" @keydown="form.onKeydown($event)">
           <div class="modal-body">
               <div class="form-group">
                 <label for="name">Name</label>
@@ -144,6 +145,7 @@ import Form from 'vform'
     export default {
         data() {
             return {
+                editMode: false,
                 query: "",
                 queryFiled: "name",
                 customers: [],
@@ -220,7 +222,7 @@ import Form from 'vform'
                 this.$snotify.success("Data Successfully Refresh", "Success");
             },   
             create() {
-            // this.editMode = false;
+                this.editMode = false;
                 this.form.reset();
                 this.form.clear();
                 $("#showModal").modal("show");
@@ -250,6 +252,38 @@ import Form from 'vform'
                 console.log(e);
                 });
             },
+            
+          edit(customer) {
+            this.editMode = true;
+            this.form.reset();
+            this.form.clear();
+            this.form.fill(customer);
+            $("#showModal").modal("show");
+          },
+          update() {
+            this.$Progress.start();
+            this.form.busy = true;
+            this.form
+              .put("/api/customer/" + this.form.id)
+              .then(response => {
+                this.getData();
+                $("#showModal").modal("hide");
+                if (this.form.successful) {
+                  this.$Progress.finish();
+                  this.$snotify.success("Customer Successfully Updated", "Success");
+                } else {
+                  this.$Progress.fail();
+                  this.$snotify.error(
+                    "Something went wrong try again later.",
+                    "Error"
+                  );
+                }
+              })
+              .catch(e => {
+                this.$Progress.fail();
+                console.log(e);
+              });
+          }
 
 
         },

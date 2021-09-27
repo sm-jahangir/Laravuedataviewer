@@ -73,7 +73,7 @@ class CustomerController extends Controller
         
         $this->validate($request,[
             'name' => 'required',
-            'email' => 'required|email|unique:customers,email,'.$customer,
+            'email' => 'required|email|unique:customers',
             'phone' => 'required|numeric',
             'address' => 'required',
             'total' => 'required|numeric',
