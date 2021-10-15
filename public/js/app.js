@@ -38798,16 +38798,11 @@ var render = function() {
                           : _vm._e(),
                         _vm._v(" "),
                         _c("img", {
-                          directives: [
-                            {
-                              name: "show",
-                              rawName: "v-show",
-                              value: _vm.showPreview,
-                              expression: "showPreview"
-                            }
-                          ],
                           attrs: {
-                            src: _vm.imagePreview,
+                            src:
+                              _vm.showPreview == !null
+                                ? _vm.imagePreview
+                                : "../storage/customer/" + _vm.form.image,
                             width: "100",
                             height: "100"
                           }
