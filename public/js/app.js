@@ -2217,6 +2217,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
@@ -2225,6 +2226,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       query: "",
       queryFiled: "name",
       customers: [],
+      imagePreview: null,
+      showPreview: false,
       pagination: {
         current_page: 1
       },
@@ -38777,7 +38780,23 @@ var render = function() {
                                 innerHTML: _vm._s(_vm.form.errors.get("image"))
                               }
                             })
-                          : _vm._e()
+                          : _vm._e(),
+                        _vm._v(" "),
+                        _c("img", {
+                          directives: [
+                            {
+                              name: "show",
+                              rawName: "v-show",
+                              value: _vm.showPreview,
+                              expression: "showPreview"
+                            }
+                          ],
+                          attrs: {
+                            src: _vm.imagePreview,
+                            width: "100",
+                            height: "100"
+                          }
+                        })
                       ])
                     ]),
                     _vm._v(" "),

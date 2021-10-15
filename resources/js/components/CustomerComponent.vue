@@ -129,6 +129,7 @@
                 <label for="image">Upload Image</label>
                 <input type="file" @change="onFileChange" class="form-control-file" name="image" id="image">
                 <div v-if="form.errors.has('image')" v-html="form.errors.get('image')" />
+                 <img v-bind:src="imagePreview" width="100" height="100" v-show="showPreview"/> 
               </div>
           </div>
           <div class="modal-footer">
@@ -154,6 +155,8 @@ import Form from 'vform'
                 query: "",
                 queryFiled: "name",
                 customers: [],
+                imagePreview: null,
+                showPreview: false,
                 pagination: {
                     current_page:1,
                 },
