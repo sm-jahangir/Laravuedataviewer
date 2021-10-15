@@ -288,7 +288,7 @@ import Form from 'vform'
             this.$Progress.start();
             this.form.busy = true;
             this.form
-              .put("/api/customer/" + this.form.id)
+              .post("/api/customer/" + this.form.id)
               .then(response => {
                 this.getData();
                 $("#showModal").modal("hide");

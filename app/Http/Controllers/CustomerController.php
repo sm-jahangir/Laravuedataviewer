@@ -80,12 +80,19 @@ class CustomerController extends Controller
         
         $this->validate($request,[
             'name' => 'required',
-            'email' => 'required|email|unique:customers',
+            'email' => 'required',
             'phone' => 'required|numeric',
             'address' => 'required',
             'total' => 'required|numeric',
         ]);
         // $customer = Customer::findOrfail($customer);
+        if($request->has('image')){
+            $image = $request->file('image');
+            $ext = $image->extension();
+            $file = time(). '.'.$ext;
+            $image->storeAs('public/customer',$file);//above 4 line process the image code
+            $customer->image =  $file;//ai code ta image ke insert kore
+        }
         $customer->name = $request->name;
         $customer->email = $request->email;
         $customer->phone = $request->phone;

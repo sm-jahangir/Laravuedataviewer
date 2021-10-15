@@ -19,5 +19,6 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::apiResource('customer', CustomerController::class);
+Route::apiResource('customer', CustomerController::class)->only('index','store','destroy','show');
+Route::post('/customer/{customer}', [CustomerController::class, 'update'])->name('customer.update');
 Route::get('search/customers/{field}/{query}', [CustomerController::class, 'search']);

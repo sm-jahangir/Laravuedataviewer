@@ -2353,7 +2353,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
     this.$Progress.start();
     this.form.busy = true;
-    this.form.put("/api/customer/" + this.form.id).then(function (response) {
+    this.form.post("/api/customer/" + this.form.id).then(function (response) {
       _this4.getData();
 
       $("#showModal").modal("hide");
