@@ -41,6 +41,13 @@ class CustomerController extends Controller
             'total' => 'required|numeric',
         ]);
         $customer = new Customer();
+        if($request->has('image')){
+            $image = $request->file('image');
+            $ext = $image->extension();
+            $file = time(). '.'.$ext;
+            $image->storeAs('public/customer',$file);//above 4 line process the image code
+            $customer->image =  $file;//ai code ta image ke insert kore
+        }
         $customer->name = $request->name;
         $customer->email = $request->email;
         $customer->phone = $request->phone;

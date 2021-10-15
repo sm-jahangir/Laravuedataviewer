@@ -23,6 +23,7 @@ class CustomerCollection extends ResourceCollection
                     'phone' => $customer->phone,
                     'address' => $customer->address,
                     'total' => $customer->total,
+                    'image' => $customer->image,
                 ];
             })
         ];

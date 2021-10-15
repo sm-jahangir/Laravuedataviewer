@@ -125,6 +125,11 @@
                 <input v-model="form.total"  type="number" name="total" id="total" class="form-control" placeholder="Your total">
                 <div v-if="form.errors.has('total')" v-html="form.errors.get('total')" />
               </div>
+              <div class="form-group">
+                <label for="image">Upload Image</label>
+                <input type="file" @change="onFileChange" class="form-control-file" name="image" id="image">
+                <div v-if="form.errors.has('image')" v-html="form.errors.get('image')" />
+              </div>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -158,7 +163,8 @@ import Form from 'vform'
                     email: "",
                     phone: "",
                     address: "",
-                    total: ""
+                    total: "",
+                    image: "",
                 }),
 
             }
@@ -227,7 +233,22 @@ import Form from 'vform'
                 this.form.clear();
                 $("#showModal").modal("show");
             },
-                    
+            onFileChange(event){
+              this.form.image = event.target.files[0];
+            },
+            onFileChange(event){
+              this.form.image = event.target.files[0];
+              let reader  = new FileReader();
+              reader.addEventListener("load", function () {
+                this.showPreview = true;
+                this.imagePreview = reader.result;
+              }.bind(this), false);
+              if( this.form.image ){
+                if ( /\.(jpe?g|png|gif)$/i.test( this.form.image.name ) ) {
+                  reader.readAsDataURL( this.form.image );
+                }
+              }
+            },      
             store() {
             this.$Progress.start();
             this.form.busy = true;

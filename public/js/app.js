@@ -2066,6 +2066,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 /* harmony import */ var vform__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vform */ "./node_modules/vform/dist/vform.es.js");
+var _methods;
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+//
+//
+//
+//
+//
 //
 //
 //
@@ -2225,7 +2234,8 @@ __webpack_require__.r(__webpack_exports__);
         email: "",
         phone: "",
         address: "",
-        total: ""
+        total: "",
+        image: ""
       })
     };
   },
@@ -2245,7 +2255,7 @@ __webpack_require__.r(__webpack_exports__);
     console.log('Customer Component mounted.');
     this.getData();
   },
-  methods: {
+  methods: (_methods = {
     getData: function getData() {
       var _this = this;
 
@@ -2289,101 +2299,113 @@ __webpack_require__.r(__webpack_exports__);
       this.form.clear();
       $("#showModal").modal("show");
     },
-    store: function store() {
-      var _this3 = this;
+    onFileChange: function onFileChange(event) {
+      this.form.image = event.target.files[0];
+    }
+  }, _defineProperty(_methods, "onFileChange", function onFileChange(event) {
+    this.form.image = event.target.files[0];
+    var reader = new FileReader();
+    reader.addEventListener("load", function () {
+      this.showPreview = true;
+      this.imagePreview = reader.result;
+    }.bind(this), false);
 
-      this.$Progress.start();
-      this.form.busy = true;
-      this.form.post("/api/customer").then(function (response) {
-        _this3.getData();
+    if (this.form.image) {
+      if (/\.(jpe?g|png|gif)$/i.test(this.form.image.name)) {
+        reader.readAsDataURL(this.form.image);
+      }
+    }
+  }), _defineProperty(_methods, "store", function store() {
+    var _this3 = this;
 
-        $("#showModal").modal("hide");
+    this.$Progress.start();
+    this.form.busy = true;
+    this.form.post("/api/customer").then(function (response) {
+      _this3.getData();
 
-        if (_this3.form.successful) {
-          _this3.$Progress.finish();
+      $("#showModal").modal("hide");
 
-          _this3.$snotify.success("Customer Successfully Saved", "Success");
-        } else {
-          _this3.$Progress.fail();
+      if (_this3.form.successful) {
+        _this3.$Progress.finish();
 
-          _this3.$snotify.error("Something went wrong try again later.", "Error");
-        }
-      })["catch"](function (e) {
+        _this3.$snotify.success("Customer Successfully Saved", "Success");
+      } else {
         _this3.$Progress.fail();
 
-        console.log(e);
-      });
-    },
-    edit: function edit(customer) {
-      this.editMode = true;
-      this.form.reset();
-      this.form.clear();
-      this.form.fill(customer);
-      $("#showModal").modal("show");
-    },
-    update: function update() {
-      var _this4 = this;
+        _this3.$snotify.error("Something went wrong try again later.", "Error");
+      }
+    })["catch"](function (e) {
+      _this3.$Progress.fail();
 
-      this.$Progress.start();
-      this.form.busy = true;
-      this.form.put("/api/customer/" + this.form.id).then(function (response) {
-        _this4.getData();
+      console.log(e);
+    });
+  }), _defineProperty(_methods, "edit", function edit(customer) {
+    this.editMode = true;
+    this.form.reset();
+    this.form.clear();
+    this.form.fill(customer);
+    $("#showModal").modal("show");
+  }), _defineProperty(_methods, "update", function update() {
+    var _this4 = this;
 
-        $("#showModal").modal("hide");
+    this.$Progress.start();
+    this.form.busy = true;
+    this.form.put("/api/customer/" + this.form.id).then(function (response) {
+      _this4.getData();
 
-        if (_this4.form.successful) {
-          _this4.$Progress.finish();
+      $("#showModal").modal("hide");
 
-          _this4.$snotify.success("Customer Successfully Updated", "Success");
-        } else {
-          _this4.$Progress.fail();
+      if (_this4.form.successful) {
+        _this4.$Progress.finish();
 
-          _this4.$snotify.error("Something went wrong try again later.", "Error");
-        }
-      })["catch"](function (e) {
+        _this4.$snotify.success("Customer Successfully Updated", "Success");
+      } else {
         _this4.$Progress.fail();
 
-        console.log(e);
-      });
-    },
-    destroy: function destroy(customer) {
-      var _this5 = this;
+        _this4.$snotify.error("Something went wrong try again later.", "Error");
+      }
+    })["catch"](function (e) {
+      _this4.$Progress.fail();
 
-      this.$snotify.clear();
-      this.$snotify.confirm("You will not be able to recover this data!", "Are you sure?", {
-        showProgressBar: false,
-        closeOnClick: false,
-        pauseOnHover: true,
-        buttons: [{
-          text: "Yes",
-          action: function action(toast) {
-            _this5.$snotify.remove(toast.id);
+      console.log(e);
+    });
+  }), _defineProperty(_methods, "destroy", function destroy(customer) {
+    var _this5 = this;
 
-            _this5.$Progress.start();
+    this.$snotify.clear();
+    this.$snotify.confirm("You will not be able to recover this data!", "Are you sure?", {
+      showProgressBar: false,
+      closeOnClick: false,
+      pauseOnHover: true,
+      buttons: [{
+        text: "Yes",
+        action: function action(toast) {
+          _this5.$snotify.remove(toast.id);
 
-            axios["delete"]("/api/customer/" + customer.id).then(function (response) {
-              _this5.getData();
+          _this5.$Progress.start();
 
-              _this5.$Progress.finish();
+          axios["delete"]("/api/customer/" + customer.id).then(function (response) {
+            _this5.getData();
 
-              _this5.$snotify.success("Customer Successfully Deleted", "Success");
-            })["catch"](function (e) {
-              _this5.$Progress.fail();
+            _this5.$Progress.finish();
 
-              console.log(e);
-            });
-          },
-          bold: true
-        }, {
-          text: "No",
-          action: function action(toast) {
-            _this5.$snotify.remove(toast.id);
-          },
-          bold: true
-        }]
-      });
-    }
-  }
+            _this5.$snotify.success("Customer Successfully Deleted", "Success");
+          })["catch"](function (e) {
+            _this5.$Progress.fail();
+
+            console.log(e);
+          });
+        },
+        bold: true
+      }, {
+        text: "No",
+        action: function action(toast) {
+          _this5.$snotify.remove(toast.id);
+        },
+        bold: true
+      }]
+    });
+  }), _methods)
 });
 
 /***/ }),
@@ -38733,6 +38755,26 @@ var render = function() {
                           ? _c("div", {
                               domProps: {
                                 innerHTML: _vm._s(_vm.form.errors.get("total"))
+                              }
+                            })
+                          : _vm._e()
+                      ]),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "form-group" }, [
+                        _c("label", { attrs: { for: "image" } }, [
+                          _vm._v("Upload Image")
+                        ]),
+                        _vm._v(" "),
+                        _c("input", {
+                          staticClass: "form-control-file",
+                          attrs: { type: "file", name: "image", id: "image" },
+                          on: { change: _vm.onFileChange }
+                        }),
+                        _vm._v(" "),
+                        _vm.form.errors.has("image")
+                          ? _c("div", {
+                              domProps: {
+                                innerHTML: _vm._s(_vm.form.errors.get("image"))
                               }
                             })
                           : _vm._e()
