@@ -50,6 +50,7 @@
                             <thead>
                                 <tr>
                                     <th scope="col">#</th>
+                                    <th scope="col">Image</th>
                                     <th scope="col">Name</th>
                                     <th scope="col">Email</th>
                                     <th scope="col">Phone</th>
@@ -60,6 +61,9 @@
                             <tbody>
                                 <tr v-show="customers.length" v-for="(customer, index) in customers" :key="customer.id">
                                     <th scope="row">{{index+1}}</th>
+                                    <td>
+                                      <img style="width:90px;" :src="'../storage/customer/'+customer.image" :alt="customer.image">
+                                    </td>
                                     <td>{{customer.name}}</td>
                                     <td>{{customer.email}}</td>
                                     <td>{{customer.phone}}</td>

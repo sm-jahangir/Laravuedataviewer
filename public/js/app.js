@@ -2218,6 +2218,10 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
+//
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
@@ -38427,6 +38431,17 @@ var render = function() {
                                   _vm._v(_vm._s(index + 1))
                                 ]),
                                 _vm._v(" "),
+                                _c("td", [
+                                  _c("img", {
+                                    staticStyle: { width: "90px" },
+                                    attrs: {
+                                      src:
+                                        "../storage/customer/" + customer.image,
+                                      alt: customer.image
+                                    }
+                                  })
+                                ]),
+                                _vm._v(" "),
                                 _c("td", [_vm._v(_vm._s(customer.name))]),
                                 _vm._v(" "),
                                 _c("td", [_vm._v(_vm._s(customer.email))]),
@@ -38846,6 +38861,8 @@ var staticRenderFns = [
     return _c("thead", [
       _c("tr", [
         _c("th", { attrs: { scope: "col" } }, [_vm._v("#")]),
+        _vm._v(" "),
+        _c("th", { attrs: { scope: "col" } }, [_vm._v("Image")]),
         _vm._v(" "),
         _c("th", { attrs: { scope: "col" } }, [_vm._v("Name")]),
         _vm._v(" "),
